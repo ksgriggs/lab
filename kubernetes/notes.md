@@ -137,7 +137,7 @@ spec:
 ReplicaSet command examples:
 
     kubectl create -f replicaset-definition.yaml
-    kubectl get replicaset
+    kubectl get replicasets.app
     kubectl delete replicaset myapp-replicaset
     kubectl replace -f replicaset-definition.yaml
     kubectl scale -replicas=6 -f replicaset-definition.yaml
