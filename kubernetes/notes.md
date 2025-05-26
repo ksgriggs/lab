@@ -47,7 +47,7 @@ Example pod-definition.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: myapp-pdo
+  name: myapp-pod
   labels:
     app: myapp
     type: front-end
