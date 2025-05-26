@@ -56,3 +56,11 @@ spec:
     - name: nginx-container
       image: nginx
 ```
+
+Pod command examples:
+
+    kubectl get pods
+    kubectl get pods -o wide
+    kubectl run nginx --image nginx
+    kubectl describe pod nginx
+    kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
