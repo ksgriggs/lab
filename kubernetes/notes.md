@@ -41,7 +41,7 @@ metadata:
 spec:
 ```
 
-Example pod.yaml
+Example pod-definition.yaml
 
 ```yaml
 apiVersion: v1
@@ -64,3 +64,80 @@ Pod command examples:
     kubectl run nginx --image nginx
     kubectl describe pod nginx
     kubectl run redis --image=redis123 --dry-run=client -o yaml > redis.yaml
+
+### Replication Controller / Replica Set
+
+[Replication Controller Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/)
+
+[ReplicaSet Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+
+Required properties:
+
+```yaml
+apiVersion:
+kind:
+metadata:
+
+spec:
+```
+
+Example rc-definition.yaml
+
+```yaml
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: myapp-rc
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pdo
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+
+  replicas: 3
+```
+
+Example replicaset-definition.yaml
+
+```yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-replicaset
+  labels:
+    app: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end
+```
+
+ReplicaSet command examples:
+
+    kubectl create -f replicaset-definition.yaml
+    kubectl get replicaset
+    kubectl delete replicaset myapp-replicaset
+    kubectl replace -f replicaset-definition.yaml
+    kubectl scale -replicas=6 -f replicaset-definition.yaml
