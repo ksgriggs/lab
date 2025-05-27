@@ -29,7 +29,7 @@ Worker nodes host applications as containers.
 
 [Pods Documentation](https://kubernetes.io/docs/concepts/workloads/pods/)
 
-The smallest deployable unit you can create in k8s. A pod is a group of one or more containers.
+Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.
 
 Required properties:
 
@@ -70,6 +70,8 @@ Pod command examples:
 [Replication Controller Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/)
 
 [ReplicaSet Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+
+A ReplicaSet's purpose is to maintain a stable set of replica Pods running at any given time. Usually, you define a Deployment and let that Deployment manage ReplicaSets automatically.
 
 Required properties:
 
@@ -141,3 +143,36 @@ ReplicaSet command examples:
     kubectl delete replicaset myapp-replicaset
     kubectl replace -f replicaset-definition.yaml
     kubectl scale -replicas=6 -f replicaset-definition.yaml
+
+### Deployments
+
+[Deployments Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+
+A Deployment manages a set of Pods to run an application workload, usually one that doesn't maintain state.
+
+Example deployment-definition.yaml
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment
+  labels:
+    name: myapp
+    type: front-end
+spec:
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        name: myapp
+        type: front-end
+    spec:
+      containers:
+        - name: nginx-controller
+          image: nginx
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end
+```
