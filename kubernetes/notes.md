@@ -263,3 +263,42 @@ Service Types
         port: 80
         nodePort: 30008
   ```
+
+### Namespaces
+
+[Namespaces Documentation](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+Namespaces provide a mechanism for isolating groups of resources within a single cluster
+
+Example namespace-definition.yaml
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+```
+
+Example compute-quota.yaml
+
+```yaml
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+  namespace: dev
+spec:
+  hard:
+    pods: "10"
+    requests.cpu: "4"
+    requests.memory: 5Gi
+    limits.cpu: "10"
+    limits.memory: 10Gi
+```
+
+Namespaces command examples:
+
+    kubectl get namespaces
+    kubectl create namespace dev
+    kubectl get pods --namespace=dev
+    kubectl create -f pod-definition.yaml --namespace=dev
