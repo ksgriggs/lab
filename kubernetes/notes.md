@@ -193,3 +193,73 @@ Deployment command examples:
 
     # Create a deployment named my-dep that runs multiple containers
     kubectl create deployment my-dep --image=busybox:latest --image=ubuntu:latest --image=nginx
+
+### Service
+
+[Service Documentation](https://kubernetes.io/docs/concepts/services-networking/service/)
+
+A Service is a method for exposing a network application that is running as one or more Pods in your cluster.
+
+Service Types
+
+- NodePort
+
+  Exposes the Service on each Node's IP at a static port (the NodePort). To make the node port available, Kubernetes sets up a cluster IP address, the same as if you had requested a Service of type: ClusterIP.
+
+  Example service-definition.yaml
+
+  ```yaml
+  apiVersion: v1
+  name: Service
+  metadata:
+    name: myapp-service
+  spec:
+    type: NodePort
+    ports:
+      - targetPort: 80
+        port: 80
+        nodePort: 30008
+    selector:
+      app: myapp
+      type: front-end
+  ```
+
+- ClusterIP
+
+  Exposes the Service on a cluster-internal IP. Choosing this value makes the Service only reachable from within the cluster. This is the default that is used if you don't explicitly specify a type for a Service. You can expose the Service to the public internet using an Ingress or a Gateway.
+
+  Example service-definition.yaml
+
+  ```yaml
+  apiVersion: v1
+  name: Service
+  metadata:
+    name: back-end
+  spec:
+    type: ClusterIP
+    ports:
+      - targetPort: 80
+        port: 80
+    selector:
+      app: myapp
+      type: back-end
+  ```
+
+- LoadBalancer
+
+  Exposes the Service externally using an external load balancer. Kubernetes does not directly offer a load balancing component; you must provide one, or you can integrate your Kubernetes cluster with a cloud provider.
+
+  Example service-definition.yaml
+
+  ```yaml
+  apiVersion: v1
+  name: Service
+  metadata:
+    name: myapp-service
+  spec:
+    type: LoadBalancer
+    ports:
+      - targetPort: 80
+        port: 80
+        nodePort: 30008
+  ```
