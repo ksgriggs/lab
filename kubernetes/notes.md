@@ -1,4 +1,4 @@
-## Cluster Architecture
+# Cluster Architecture
 
 [Cluster Architecture Documentation](https://kubernetes.io/docs/concepts/architecture/)
 
@@ -358,3 +358,66 @@ spec:
       value: "blue"
       effect: "NoSchedule"
 ```
+
+### Node Selectors
+
+[Node Selector Documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
+Example pod-definition.yaml
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+spec:
+  containers:
+    - name: data-processor
+      image: data-processor
+  nodeSelector:
+    size: Large
+```
+
+Command examples:
+
+    kubectl label nodes <node-name> <label-key>=<label-value>
+    kubectl label nodes node-1 size=Large
+
+Node selectors is limited such that we can't say place the pod on nodes labeled "Medium" or "Large". We can't use OR or NOT.
+
+### Node Affinity
+
+[Node Affinity Documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+
+To place a pod in a node labeled size=Large or size=Medium, use the example below.
+
+Example pod-definition.yaml
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+spec:
+  containers:
+    - name: data-processor
+      image: data-processor
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: size
+                operator: In
+                values:
+                  - Large
+                  - Medium
+```
+
+Node affinity types:
+
+- Available
+  - requiredDuringSchedulingIgnoredDuringExecution
+  - preferedDuringSchedulingIgnoredDuringExecution
+- Planned
+  - requiredDuringSchedulingRequiredDuringExecution
