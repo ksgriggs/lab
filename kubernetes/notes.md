@@ -325,3 +325,36 @@ Command examples:
 
     kubectl get pods --selector app=App1
     kubectl get pods --selector function=Front-end
+
+### Taints and Tolerations
+
+[Taints and Tolerations Documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+
+Command examples:
+
+    kubectl taint nodes node-name key=value:taint-effect
+
+    There are three taint effects:
+      - NoSchedule
+      - PreferNoSchedule
+      - NoExecute
+
+    kubectl taint nodes node1 app=blue:NoSchedule
+
+Tolerations example pod-definition.yaml
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx
+  tolerations:
+    - key: "app"
+      operator: "Equal"
+      value: "blue"
+      effect: "NoSchedule"
+```
