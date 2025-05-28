@@ -421,3 +421,90 @@ Node affinity types:
   - preferedDuringSchedulingIgnoredDuringExecution
 - Planned
   - requiredDuringSchedulingRequiredDuringExecution
+
+### Resource Requirements and Limits
+
+[Resource Requirements and Limits Documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+
+Example pod-defninition.yaml
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-webapp-color
+  labels:
+    name: simple-webapp-color
+spec:
+  containers:
+    - name: simple-webapp-color
+      image: simple-webapp-color
+    ports:
+      - containerPort: 8080
+    resources:
+      requests:
+        memory: "4Gi"
+        cpu: 2
+```
+
+1 CPU is equal to:
+
+- 1 AWS vCPU
+- 1 GCP Core
+- 1 Azure Core
+- 1 Hyperthread
+
+Memory:
+
+- 1 G (Gigabyte) = 1,000,000,000 bytes
+- 1 M (Megabyte) = 1,000,000 bytes
+- 1 K (kilobyte) = 1,000 bytes
+- 1 Gi (Gibibyte) = 1,073,741,824 bytes
+- 1 Mi (Mebibyte) = 1,048,576 bytes
+- 1 Ki (Kibibyte) = 1,024 bytes
+
+Example pod-defninition.yaml
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-webapp-color
+  labels:
+    name: simple-webapp-color
+spec:
+  containers:
+    - name: simple-webapp-color
+      image: simple-webapp-color
+    ports:
+      - containerPort: 8080
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: 1
+      limits:
+        memory: "2Gi"
+        cpu: 2
+```
+
+[Limit Ranges Documentation](https://kubernetes.io/docs/concepts/policy/limit-range/)
+
+Example limit-range-cpu.yaml
+
+```yaml
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: cpu-resource-constraint
+spec:
+  limits:
+    - default:
+        cpu: 500m
+      defaultRequest:
+        cpu: 500m
+      max:
+        cpu: "1"
+      min:
+        cpu: 100m
+      type: Container
+```
