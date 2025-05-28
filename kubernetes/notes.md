@@ -302,3 +302,26 @@ Namespaces command examples:
     kubectl create namespace dev
     kubectl get pods --namespace=dev
     kubectl create -f pod-definition.yaml --namespace=dev
+
+### Labels and Selectors
+
+[Labels and Selectors Documentation](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+  labels:
+    app: App1
+    function: Front-end
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+```
+
+Command examples:
+
+    kubectl get pods --selector app=App1
+    kubectl get pods --selector function=Front-end
