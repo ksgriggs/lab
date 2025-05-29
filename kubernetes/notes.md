@@ -640,3 +640,7 @@ profiles:
           -name: "*"
   - schedulerName: my-scheduler-4
 ```
+
+### Admission Controllers
+
+[Admission Controllers Documentation](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
