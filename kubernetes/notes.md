@@ -611,3 +611,32 @@ spec:
     - name: pod-with-default-annotation-container
       image: registry.k8s.io/pause:3.8
 ```
+
+### Scheduler Profiles
+
+[Scheduler Profiles Documentation](https://kubernetes.io/docs/reference/scheduling/config/#multiple-profiles)
+
+Example my-scheduler-2-config.yaml
+
+```yaml
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+profiles:
+  - schedulerName: my-scheduler-2
+    plugins:
+      score:
+        disabled:
+          - name: TaintToleraion
+        enabled:
+          - name: MyCustomPluginA
+          - name: MyCustomPluginB
+  - schedulerName: my-scheduler-3
+    plugins:
+      preScore:
+        disabled:
+          - name: "*"
+      score:
+        disabled:
+          -name: "*"
+  - schedulerName: my-scheduler-4
+```
