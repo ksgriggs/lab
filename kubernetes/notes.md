@@ -589,3 +589,25 @@ spec:
         - containerPort: 8080
   priorityClassName: high-priority
 ```
+
+### Multiple Schedulers
+
+[Multiple Schedulers Documentation](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/)
+
+Example pod-definition.yaml
+
+This pod manifest uses default-scheduler.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: annotation-default-scheduler
+  labels:
+    name: multischeduler-example
+spec:
+  schedulerName: default-scheduler
+  containers:
+    - name: pod-with-default-annotation-container
+      image: registry.k8s.io/pause:3.8
+```
