@@ -550,3 +550,9 @@ spec:
         - name: monitoring-agent
           image: monitoring-agent
 ```
+
+### Static Pods
+
+[Static Pods Documentation](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
+
+Manifests for static pods usually found in /etc/kubernets/manifests.
