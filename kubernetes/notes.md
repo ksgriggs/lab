@@ -556,3 +556,36 @@ spec:
 [Static Pods Documentation](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
 
 Manifests for static pods usually found in /etc/kubernets/manifests.
+
+### Priority Classes
+
+[Priority Classes Documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
+
+Priority Class example priority-class.yaml
+
+```yaml
+apiVersion: schduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000000
+description: "Priority class for mission critical pods"
+```
+
+pod-definition.yaml
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    name: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      ports:
+        - containerPort: 8080
+  priorityClassName: high-priority
+```
