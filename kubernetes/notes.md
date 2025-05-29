@@ -525,3 +525,28 @@ spec:
     limits.cpu: 10
     limits.memory: 10Gi
 ```
+
+### DaemonSets
+
+[DaemonSets Documentation](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+
+DaemonSet example daemon-set-definition.yaml
+
+```yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: monitoring-daemon
+spec:
+  selector:
+    matchLabels:
+      app: monitoring-daemon
+  template:
+    metadata:
+      labels:
+        app: monitoring-daemon
+    spec:
+      containers:
+        - name: monitoring-agent
+          image: monitoring-agent
+```
