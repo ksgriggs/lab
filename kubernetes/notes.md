@@ -669,3 +669,165 @@ Command examples:
 
     # Start the nginx pod using a different command and custom arguments
     kubectl run nginx --image=nginx --command -- <cmd> <arg1> ... <argN>
+
+### Environment Variables in a pod definition file
+
+Example pod-definition.yaml
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-sleeper-pod
+spec:
+  containers:
+    - name: ubuntu-sleeper
+      image: ubuntu-sleeper
+      command: ["sleep2.0"] # overrides ENTRYPOINT on the image
+      args: ["10"] # overrides CMD on the image
+      env:
+        - name: TIER
+          value: dev
+```
+
+Using a ConfigMap:
+
+Imperative:
+
+    kubectl create configmap <config-name> --from-literal=<key>=<value>
+    kubectl create configmap app-config --from-literal=APP_COLOR=blue
+
+Declarative:
+
+Example config-map.yaml
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  APP_COLOR: blue
+  APP_MODE: prod
+```
+
+Example pod-definition.yaml
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-webapp-color
+  labels:
+    name: simple-webapp-color
+spec:
+  containers:
+    - name: simple-webapp-color
+      image: simple-webapp-color
+      ports:
+        - containerPort: 8080
+      envFrom:
+        - configMapRef:
+          name: app-config
+```
+
+Or to use just one of the env variables set in configmap app-config:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-webapp-color
+  labels:
+    name: simple-webapp-color
+spec:
+  containers:
+    - name: simple-webapp-color
+      image: simple-webapp-color
+      ports:
+        - containerPort: 8080
+      env:
+        - name: APP_COLOR
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: APP_COLOR
+```
+
+Using a Secret:
+
+# DO NOT CHECK YOUR SECRET OBJECTS INTO SCM
+
+Imperative:
+
+    kubectl create secret generic <secret-name> --from-literal=<key>=<value>
+    kubectl create secret generic app-secret --from-literal=DB_Host=mysql
+
+    kubectl create secret generic <secret-name> --from-file=<path-to-file>
+    kubectl create secret generic app-secret --from-file=app_secret.properties
+
+Declarative:
+
+The secret values must be encoded in this file.
+
+    You can encode the data like this:
+
+    echo -n "mysql" | base64
+    echo -n "root" | base64
+    echo -n "paswrd" | base64
+
+Example secret-data.yaml
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secret
+data:
+  DB_Host: bXlzcWw=
+  DB_User: cm9vdA==
+  DB_Password: cGFzd3Jk
+```
+
+Example pod-definition.yaml
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-webapp-color
+  labels:
+    name: simple-webapp-color
+spec:
+  containers:
+    - name: simple-webapp-color
+      image: simple-webapp-color
+      ports:
+        - containerPort: 8080
+      envFrom:
+        - secretRef:
+            name: app-secret
+```
+
+Or to use just one of the env variables set in secrets app-config:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-webapp-color
+  labels:
+    name: simple-webapp-color
+spec:
+  containers:
+    - name: simple-webapp-color
+      image: simple-webapp-color
+      ports:
+        - containerPort: 8080
+      env:
+        - name: DB_Password
+          valueFrom:
+            secretKeyRef:
+              name: app-secret
+              key: DB_Password
+```
