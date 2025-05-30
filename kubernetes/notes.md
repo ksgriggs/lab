@@ -644,3 +644,28 @@ profiles:
 ### Admission Controllers
 
 [Admission Controllers Documentation](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/)
+
+### Commands and Arguements in a pod definition file
+
+Example pod-definition.yaml
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-sleeper-pod
+spec:
+  containers:
+    - name: ubuntu-sleeper
+      image: ubuntu-sleeper
+      command: ["sleep2.0"] # overrides ENTRYPOINT on the image
+      args: ["10"] # overrides CMD on the image
+```
+
+Command examples:
+
+    # Start the nginx pod using the default command, but use custom arguments (arg1 .. argN) for that command
+    kubectl run nginx --image=nginx -- <arg1> <arg2> ... <argN>
+
+    # Start the nginx pod using a different command and custom arguments
+    kubectl run nginx --image=nginx --command -- <cmd> <arg1> ... <argN>
