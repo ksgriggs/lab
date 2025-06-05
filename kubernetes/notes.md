@@ -852,3 +852,70 @@ spec:
     - name: log-agent
       image: log-agent
 ```
+
+### Autoscaling
+
+- Horizontal Pod Autoscalier (HPA)
+  - Adds / removes Pods based on load.
+  - Keeps existing Pods running.
+  - Avoids unnecessary idle Pods.
+  - Best for web apps, microservices, stateless services.
+- Vertical Pod Autoscaler (VPA)
+  - Increases CPU & memory of existing Pods.
+  - Restarts Pods to apply new resource values.
+  - Prevents over-provisioning of CPU/memory.
+  - Best for stateful workloads, CPU/memory heavy apps (DBs, ML workloads)
+
+[Autoscaling Documentation](https://kubernetes.io/docs/concepts/workloads/autoscaling/)
+
+Example my-app-hpa.xml
+
+```yaml
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-app
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Resources
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+```
+
+To install VPA run:
+
+    kubectl apply -f https://github.com/kubernetes/autoscaler/releases/latest/downloads/vertical-pod-autoscaler.yaml
+
+Example my-app-vpa.yaml
+
+```yaml
+apiServer: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: my-app-vpa
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-ap
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicy:
+      containerPolicies:
+        - containername: "my-app"
+          minAllowed:
+            cpu: "250m"
+          maxAllowed:
+            cpu: "2"
+          controllerResources: ["cpu"]
+```
