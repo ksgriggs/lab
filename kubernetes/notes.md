@@ -919,3 +919,17 @@ spec:
             cpu: "2"
           controllerResources: ["cpu"]
 ```
+
+### Cluster Maintenance
+
+OS Upgrades
+
+    kubectl drain node-01
+    kubectl cordon node-01
+    kubectl uncordon node-01
+
+Kubernetes Upgrade Process
+
+[Upgrading kubeadm clusters](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
+
+    Upgrade one node at a time. Start with control plane(s).
